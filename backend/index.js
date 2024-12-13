@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 const app = express()
 dotenv.config()
-// thus is jnew cmmd
 
 const port = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL
