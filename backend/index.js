@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import fileUpload from 'express-fileupload'
-import cloudinary from 'cloudinary'
+import { v2 as cloudinary } from 'cloudinary';
 
 import mongoose from 'mongoose'
 import userRoute from "./routes/userRoute.js"

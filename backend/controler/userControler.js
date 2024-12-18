@@ -1,11 +1,13 @@
 import { User } from "../models/user.models.js"
+import { v2 as cloudinary } from 'cloudinary';
+import bcrypt from 'bcryptjs'
 
 export const register = async(req, res) =>{
     if(!req.files || Object.keys(req.files).length === 0){
         return res.status(400).json({message: "no file uploaded"})
     }
-    const {img} = req.files
-    const allowedFormats = ["jpg", "png"]
+    const {img} = req.files;
+    const allowedFormats = ["image/jpeg", "image/png", "image/webp"]
     if(!allowedFormats.includes(img.mimetype)){
         return res.status(400).json({ message: "invalid img formate"})
     }
@@ -24,13 +26,20 @@ export const register = async(req, res) =>{
         console.log(cloudinaryResponse.error);
         
     }
-    const newUser = new User ({email, name, password, phone, role, img:{
-        public_id: img.public_id,
-        url: img.url
+    const hasedPassword = await bcrypt.hash(password, 10)
+    const newUser = new User ({
+        email, 
+        name, 
+        password: hasedPassword, 
+        phone, 
+        role, 
+        img:{
+        public_id: cloudinaryResponse.public_id,
+        url: cloudinaryResponse.url
     }})
     await newUser.save()
     if(newUser){
-        res.status(201).json({massage: "user registerd successfully"})
+        res.status(201).json({massage: "user registerd successfully", newUser})
     }
     
     
